@@ -129,6 +129,7 @@ input bool    EnableVWAPFilter            = true;       // Enable VWAP filtering
 input ENUM_APPLIED_PRICE VWAPPriceMethod  = PRICE_TYPICAL; // VWAP calculation price
 input double  MinVolumeThreshold          = 1.0;        // Minimum volume for VWAP
 input bool    ResetVWAPDaily              = true;       // Reset VWAP daily
+input int     VWAPLookbackPeriod          = 100;        // VWAP calculation lookback period
 input uint    SignalBar                   = 1;          // Bar number for signal (0=current, 1=previous)
 
 // Enhanced Signal Filtering
@@ -212,7 +213,7 @@ int OnInit()
     STVWAPHandle = iCustom(_Symbol, InpIndTimeframe, "Enhanced_ST_VWAP_Indicator",
                           ATRPeriod, STMultiplier, SourcePrice, TakeWicksIntoAccount,
                           VWAPPriceMethod, MinVolumeThreshold, ResetVWAPDaily,
-                          EnableVWAPFilter, true, MinPointsFromVWAP);
+                          VWAPLookbackPeriod, EnableVWAPFilter, true, MinPointsFromVWAP);
     
     if(STVWAPHandle == INVALID_HANDLE)
     {

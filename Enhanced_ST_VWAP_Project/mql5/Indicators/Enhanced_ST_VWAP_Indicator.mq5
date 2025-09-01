@@ -902,6 +902,7 @@ void CreateSignalObject(int barIndex, datetime time, double price, string signal
       ObjectSetInteger(0, objName, OBJPROP_ARROWCODE, (signalType=="BUY") ? 233 : (signalType=="SELL" ? 234 : 159));
       ObjectSetInteger(0, objName, OBJPROP_COLOR, signalColor);
       ObjectSetInteger(0, objName, OBJPROP_WIDTH, CircleWidth);
+      ObjectSetInteger(0, objName, OBJPROP_ANCHOR, ANCHOR_CENTER);
       ObjectSetInteger(0, objName, OBJPROP_BACK, false);
       ObjectSetInteger(0, objName, OBJPROP_SELECTABLE, false);
       ObjectSetInteger(0, objName, OBJPROP_HIDDEN, true);
