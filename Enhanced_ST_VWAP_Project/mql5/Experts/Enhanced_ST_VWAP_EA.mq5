@@ -173,6 +173,29 @@ static datetime g_lastConnectionCheck = 0;
 static bool g_connectionLost = false;
 
 //+------------------------------------------------------------------+
+//| Reset daily trading statistics                                   |
+//+------------------------------------------------------------------+
+void ResetDailyStats()
+{
+    g_dailyStats.totalTrades = 0;
+    g_dailyStats.winTrades = 0;
+    g_dailyStats.loseTrades = 0;
+    g_dailyStats.totalProfit = 0.0;
+    g_dailyStats.totalLoss = 0.0;
+    g_dailyStats.maxDrawdown = 0.0;
+    g_dailyStats.maxProfit = 0.0;
+    g_dailyStats.lastTradeTime = 0;
+    g_dailyStats.averageWin = 0.0;
+    g_dailyStats.averageLoss = 0.0;
+    g_dailyStats.profitFactor = 0.0;
+    g_dailyStats.winRate = 0.0;
+    g_dailyStats.consecutiveWins = 0;
+    g_dailyStats.consecutiveLosses = 0;
+    g_dailyStats.maxConsecutiveWins = 0;
+    g_dailyStats.maxConsecutiveLosses = 0;
+}
+
+//+------------------------------------------------------------------+
 //| Expert initialization function                                   |
 //+------------------------------------------------------------------+
 int OnInit()
@@ -922,6 +945,7 @@ void CheckDailyReset()
         }
             
         ResetDailyStatistics();
+        ResetDailyStats();
         g_lastDayReset = currentDay;
         
         if(VerboseLogs)
