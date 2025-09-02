@@ -129,6 +129,7 @@ input bool    EnableVWAPFilter            = true;       // Enable VWAP filtering
 input ENUM_APPLIED_PRICE VWAPPriceMethod  = PRICE_TYPICAL; // VWAP calculation price
 input double  MinVolumeThreshold          = 1.0;        // Minimum volume for VWAP
 input bool    ResetVWAPDaily              = true;       // Reset VWAP daily
+input int     VWAPLookbackPeriod          = 100;        // VWAP calculation lookback period
 input uint    SignalBar                   = 1;          // Bar number for signal (0=current, 1=previous)
 
 // Enhanced Signal Filtering
@@ -173,6 +174,29 @@ static datetime g_lastConnectionCheck = 0;
 static bool g_connectionLost = false;
 
 //+------------------------------------------------------------------+
+//| Reset daily trading statistics                                   |
+//+------------------------------------------------------------------+
+void ResetDailyStats()
+{
+    g_dailyStats.totalTrades = 0;
+    g_dailyStats.winTrades = 0;
+    g_dailyStats.loseTrades = 0;
+    g_dailyStats.totalProfit = 0.0;
+    g_dailyStats.totalLoss = 0.0;
+    g_dailyStats.maxDrawdown = 0.0;
+    g_dailyStats.maxProfit = 0.0;
+    g_dailyStats.lastTradeTime = 0;
+    g_dailyStats.averageWin = 0.0;
+    g_dailyStats.averageLoss = 0.0;
+    g_dailyStats.profitFactor = 0.0;
+    g_dailyStats.winRate = 0.0;
+    g_dailyStats.consecutiveWins = 0;
+    g_dailyStats.consecutiveLosses = 0;
+    g_dailyStats.maxConsecutiveWins = 0;
+    g_dailyStats.maxConsecutiveLosses = 0;
+}
+
+//+------------------------------------------------------------------+
 //| Expert initialization function                                   |
 //+------------------------------------------------------------------+
 int OnInit()
@@ -189,7 +213,7 @@ int OnInit()
     STVWAPHandle = iCustom(_Symbol, InpIndTimeframe, "Enhanced_ST_VWAP_Indicator",
                           ATRPeriod, STMultiplier, SourcePrice, TakeWicksIntoAccount,
                           VWAPPriceMethod, MinVolumeThreshold, ResetVWAPDaily,
-                          EnableVWAPFilter, true, MinPointsFromVWAP);
+                          VWAPLookbackPeriod, EnableVWAPFilter, true, MinPointsFromVWAP);
     
     if(STVWAPHandle == INVALID_HANDLE)
     {
@@ -922,6 +946,7 @@ void CheckDailyReset()
         }
             
         ResetDailyStatistics();
+        ResetDailyStats();
         g_lastDayReset = currentDay;
         
         if(VerboseLogs)

@@ -890,27 +890,28 @@ void DisplayDashboardLines(const string &lines[])
 //+------------------------------------------------------------------+
 //| Create signal object with tooltip                               |
 //+------------------------------------------------------------------+
-void CreateSignalObject(int index, datetime time, double price, string signalType, color signalColor)
+void CreateSignalObject(int barIndex, datetime time, double price, string signalType, color signalColor)
 {
    static int signalCount = 0;
    signalCount++;
-   
-   string objName = g_objectPrefix + "Signal_" + (string)signalCount;
-   
+
+   string objName = g_objectPrefix + "Signal_" + IntegerToString(signalCount);
+
    if(ObjectCreate(0, objName, OBJ_ARROW, 0, time, price))
    {
-      ObjectSetInteger(0, objName, OBJPROP_ARROWCODE, signalType == "BUY" ? 233 : (signalType == "SELL" ? 234 : 159));
+      ObjectSetInteger(0, objName, OBJPROP_ARROWCODE, (signalType=="BUY") ? 233 : (signalType=="SELL" ? 234 : 159));
       ObjectSetInteger(0, objName, OBJPROP_COLOR, signalColor);
       ObjectSetInteger(0, objName, OBJPROP_WIDTH, CircleWidth);
+      ObjectSetInteger(0, objName, OBJPROP_ANCHOR, ANCHOR_CENTER);
       ObjectSetInteger(0, objName, OBJPROP_BACK, false);
       ObjectSetInteger(0, objName, OBJPROP_SELECTABLE, false);
       ObjectSetInteger(0, objName, OBJPROP_HIDDEN, true);
-      
-      // Add tooltip if enabled
+
       if(ShowTooltips)
       {
-         string tooltip = StringFormat("%s Signal\nTime: %s\nPrice: %.5f\nST: %.5f\nVWAP: %.5f", 
-                         signalType, TimeToString(time), price, STBuffer[index], VWAPBuffer[index]);
+         string tooltip = StringFormat("%s Signal\nTime: %s\nPrice: %.5f\nST: %.5f\nVWAP: %.5f",
+                                       signalType, TimeToString(time), price,
+                                       STBuffer[barIndex], VWAPBuffer[barIndex]);
          ObjectSetString(0, objName, OBJPROP_TOOLTIP, tooltip);
       }
    }
